@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UU Bus - Home</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo-container">
+            <button class="menu-btn" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="/home" class="brand-logo">
+                <img th:src="@{/logo.png}" alt="UU Logo">
+                <span>UU Transport</span>
+            </a>
+            </div>
+        </div>
+        
+    </nav>
+
+    <div class="sidebar-overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-header">
+                <h3>Main Menu</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="/home" class="active"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="/profile"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="/notifications"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="/support"><i class="fas fa-headset"></i> Support</a></li>
+                <hr>
+                
+                
+                <li><a href="/logout" style="color: #ff4d4d;"><i class="fas fa-power-off"></i> Logout</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="hero">
+            <h1>Welcome to UU Transport</h1>
+            <p>Reliable campus commuting at your fingertips. Choose your stand to see schedule.</p>
+        </header>
+
+        <main class="container">
+            <div class="location-grid">
+                <a th:each="loc : ${locations}" th:href="@{'/schedule/' + ${loc.name}}" class="card">
+                    <i class="fas fa-bus"></i>
+                    <span th:text="${loc.name}">LOCATION NAME</span>
+                </a>
+            </div>
+
+            <div th:if="${#lists.isEmpty(locations)}" class="empty-state">
+                <i class="fas fa-info-circle"></i> No locations available.
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 <strong>Uttara University</strong>. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    </script>
+</body>
+
+</html>

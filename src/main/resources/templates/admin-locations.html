@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Locations - UU Bus Admin</title>
+    <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/core.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo-container">
+            <button class="menu-btn" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="/admin/dashboard" class="brand-logo">
+                <img th:src="@{/logo.png}" alt="UU Logo">
+                <span>UU Admin Panel</span>
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="/admin/logout" class="logout-link"><i class="fas fa-power-off"></i> Logout</a>
+        </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Control Center</h3>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="/admin/dashboard"><i class="fas fa-bus"></i> Manage Schedules</a></li>
+            <li><a href="/admin/users"><i class="fas fa-users"></i> Manage Users</a></li>
+            <li><a href="/admin/location" class="active"><i class="fas fa-map-marker-alt"></i> Locations</a></li>
+            <hr>
+            <li><a href="/admin/logout" style="color: var(--uu-danger);"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </li>
+        </ul>
+    </aside>
+
+    <div class="main-wrapper">
+        <div class="admin-card">
+            <h3 class="section-title"><i class="fas fa-plus-circle"></i> Add New Location</h3>
+            <form th:action="@{/admin/add-location}" method="post" style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <input type="text" name="name" placeholder="Enter Stand Name (e.g. Uttara)" required
+                    style="flex: 1; min-width: 200px; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; outline: none;">
+                <button type="submit" class="btn-save" style="margin-top: 0; padding: 10px 25px;">
+                    <i class="fas fa-plus"></i> Add Location
+                </button>
+            </form>
+        </div>
+
+        <div class="admin-card">
+            <h3 class="section-title"><i class="fas fa-map-marked-alt"></i> Current Locations</h3>
+
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="locSearch" onkeyup="filterLocations()" class="search-input"
+                    placeholder="Search location name...">
+            </div>
+
+            <div class="table-responsive">
+                <table class="schedule-table" id="locTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">ID</th>
+                            <th>Location Name</th>
+                            <th style="width: 150px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="loc : ${locations}">
+                            <form th:action="@{/admin/location/update}" method="post">
+                                <input type="hidden" name="id" th:value="${loc.id}">
+                                <td th:text="${loc.id}"></td>
+                                <td>
+                                    <input type="text" name="name" th:value="${loc.name}"
+                                        class="table-input loc-name-input" required>
+                                </td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button type="submit" class="btn-update-inline" title="Update Name">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <a th:href="@{'/admin/location/delete/' + ${loc.id}}" class="btn-delete-inline"
+                                            onclick="return confirm('Deleting a location will affect all bus schedules tied to it. Proceed?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </form>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="toast" class="toast-notification">Action completed successfully!</div>
+
+    <script>
+        // Sidebar Toggle Logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    
+        // Search Filter Logic
+        function filterLocations() {
+            let input = document.getElementById("locSearch").value.toLowerCase();
+            let table = document.getElementById("locTable");
+            let tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                let nameField = tr[i].querySelector(".loc-name-input");
+                if (nameField) {
+                    let nameValue = nameField.value.toLowerCase();
+                    tr[i].style.display = nameValue.includes(input) ? "" : "none";
+                }
+            }
+        }
+    </script>
+    <script th:inline="javascript">
+        /* The syntax below uses 'natural templates'. 
+           The value after the comment is a fallback for the IDE. 
+        */
+        const msg = /*[[${message}]]*/ null;
+        const successMsg = /*[[${success}]]*/ null;
+
+        function showToast(text, isError = false) {
+            const toast = document.getElementById("toast");
+            if (!toast) return; // Safety check
+
+            toast.innerText = text;
+
+            // Change color based on type
+            if (isError) {
+                toast.style.backgroundColor = "var(--uu-danger)";
+            } else {
+                toast.style.backgroundColor = "var(--uu-success)";
+            }
+
+            toast.classList.add("show");
+
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+
+        // Trigger on page load if message exists
+        window.onload = function () {
+            if (msg) showToast(msg);
+            else if (successMsg) showToast(successMsg);
+        };
+    </script>
+</body>
+
+</html>

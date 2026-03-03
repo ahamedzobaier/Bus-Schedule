@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Schedule - UU</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/schedule.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo-container">
+            <button class="menu-btn" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        <a href="/home" class="brand-logo">
+            <img th:src="@{/logo.png}" alt="UU Logo">
+            <span>UU Transport</span>
+        </a>
+        </div>
+        </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-header">
+                <h3>Main Menu</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="/home"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="/profile" class="active"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="/notifications"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="/support"><i class="fas fa-headset"></i> Support</a></li>
+                <hr>
+                <li><a href="/logout" style="color: #ff4d4d;"><i class="fas fa-power-off"></i> Logout</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <div class="main-wrapper">
+        <div class="nav-bar-title">
+            <h1 th:text="${locationName} + ' Bus Schedule'"></h1>
+        </div>
+
+        <main class="container">
+            <div class="day-tabs">
+                <a th:each="day : ${days}" th:href="@{'/schedule/' + ${locationName}(day=${day})}" th:text="${day}"
+                    th:classappend="${day == currentDay} ? 'active' : ''" class="day-link"></a>
+            </div>
+
+            <div class="print-section">
+                <button onclick="window.print()" class="btn-print">
+                    <i class="fas fa-print"></i> Download/Print PDF
+                </button>
+            </div>
+
+            <div class="table-card">
+                <h2><i class="fas fa-arrow-up"></i> UP-TIME (To University)</h2>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Bus No</th>
+                                <th>Start Time</th>
+                                <th>Route</th>
+                                <th>Arrival</th>
+                                <th>Driver</th>
+                                <th>Contact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="s : ${upSchedules}">
+                                <td data-label="Bus No" th:text="${s.busNumber}"></td>
+                                <td data-label="Start Time" th:text="${s.startTime}"></td>
+                                <td data-label="Route" th:text="${s.route}"></td>
+                                <td data-label="Arrival" th:text="${s.arrivalTime}"></td>
+                                <td data-label="Driver" th:text="${s.driverName}"></td>
+                                <td data-label="Contact" th:text="${s.contact}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-card" style="margin-top: 40px;">
+                <h2><i class="fas fa-arrow-down"></i> DOWN-TIME (From University)</h2>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Bus No</th>
+                                <th>Start Time</th>
+                                <th>Route</th>
+                                <th>Arrival</th>
+                                <th>Driver</th>
+                                <th>Contact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="s : ${downSchedules}">
+                                <td data-label="Bus No" th:text="${s.busNumber}"></td>
+                                <td data-label="Start Time" th:text="${s.startTime}"></td>
+                                <td data-label="Route" th:text="${s.route}"></td>
+                                <td data-label="Arrival" th:text="${s.arrivalTime}"></td>
+                                <td data-label="Driver" th:text="${s.driverName}"></td>
+                                <td data-label="Contact" th:text="${s.contact}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <div class="pdf-footer">
+            <hr>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #666;">
+                <p>Uttara University Transport Dept.</p>
+                <p th:text="'Generated: ' + ${#temporals.format(#temporals.createNow(), 'dd MMM yyyy')}"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    </script>
+</body>
+
+</html>

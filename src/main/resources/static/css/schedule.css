@@ -1,0 +1,207 @@
+/* schedule.css */
+
+:root {
+    --uu-blue: #003399;
+    /* Define if not inherited */
+}
+
+.nav-bar-title {
+    background: #e9ecef;
+    color: var(--uu-blue);
+    padding: 20px;
+    text-align: center;
+    border-radius: 12px;
+    margin: 20px;
+}
+
+.nav-bar-title h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+/* Enhanced Table Card */
+.table-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 51, 153, 0.08);
+    /* Better depth */
+    margin-bottom: 30px;
+    border: 1px solid #eef2f6;
+    overflow: hidden;
+}
+
+.table-card h2 {
+    font-size: 1.25rem;
+    margin-top: 0;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--uu-blue);
+}
+
+/* Day Tabs / Navigation */
+.day-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.day-link {
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid var(--uu-blue);
+    color: var(--uu-blue);
+    border-radius: 20px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.day-link.active {
+    background: var(--uu-blue);
+    color: white;
+}
+
+/* Action Buttons */
+.btn-print {
+    background: #10b981;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 20px;
+    transition: 0.3s;
+}
+
+.btn-print:hover {
+    background:#003399;
+}
+
+/* Table Styling (Desktop) */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th {
+    background: #f8fafc;
+    color: #64748b;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    padding: 15px;
+    border-bottom: 2px solid #edf2f7;
+    text-align: left;
+}
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid #edf2f7;
+    color: #1e293b;
+    font-size: 0.9rem;
+}
+
+tr {
+    transition: background 0.2s ease;
+}
+
+tr:hover {
+    background: #f0f4ff !important;
+}
+
+/* Mobile Table Cards (Responsive) */
+@media (max-width: 768px) {
+
+    .table-responsive table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border: 1px solid #dee2e6;
+        margin-bottom: 15px;
+        padding: 10px 0;
+        background: #ffffff;
+        border-radius: 8px;
+    }
+
+    td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #f8fafc;
+    }
+
+    td:last-child {
+        border-bottom: none;
+    }
+
+    td:before {
+        content: attr(data-label);
+        /* Requires data-label in HTML */
+        position: absolute;
+        left: 15px;
+        width: 45%;
+        text-align: left;
+        font-weight: 700;
+        color: var(--uu-blue);
+    }
+}
+
+/* Print Styling */
+.pdf-footer {
+    display: none;
+}
+
+@media print {
+
+    .navbar,
+    .sidebar,
+    .sidebar-overlay,
+    .btn-print,
+    .day-tabs {
+        display: all !important;
+    }
+
+    .main-wrapper {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .table-card {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+
+    th,
+    td {
+        border: 1px solid #000;
+        color: black;
+    }
+
+    .pdf-footer {
+        display: block !important;
+        text-align: center;
+        margin-top: 40px;
+    }
+}

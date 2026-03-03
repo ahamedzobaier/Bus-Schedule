@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - UU Bus</title>
+    <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .placeholder-content {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .coming-soon-icon {
+            font-size: 80px;
+            color: #cbd5e1;
+            margin-bottom: 25px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+        }
+
+        .feature-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .preview-card {
+            background: #f8fafc;
+            border: 1px dashed var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            color: #64748b;
+        }
+
+        .preview-card i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--uu-blue);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo-container">
+            <button class="menu-btn" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="/home" class="brand-logo">
+                <img th:src="@{/logo.png}" alt="UU Logo">
+                <span>UU Transport</span>
+            </a>
+        </div>
+        
+    </nav>
+
+    <div class="sidebar-overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-header">
+                <h3>Menu</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="/home"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="/profile"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="/notifications" class="active"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="/support"><i class="fas fa-headset"></i> Support</a></li>
+                <hr>
+                <li><a href="/logout" style="color: #ff4d4d;"><i class="fas fa-power-off"></i> Logout</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <div class="main-wrapper">
+        <div class="main-content">
+
+            <div class="admin-card">
+                <div class="placeholder-content">
+                    <div class="coming-soon-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h2 style="color: var(--uu-blue); margin-bottom: 10px;">Notifications System</h2>
+                    <p style="color: #64748b; font-size: 1.1rem;">We are working on a smart alert system for your campus
+                        commute.</p>
+
+                    <div class="feature-preview">
+                        <div class="preview-card">
+                            <i class="fas fa-clock"></i>
+                            <h4>Delay Alerts</h4>
+                            <p>Real-time updates if a bus is running behind schedule.</p>
+                        </div>
+                        <div class="preview-card">
+                            <i class="fas fa-route"></i>
+                            <h4>Route Changes</h4>
+                            <p>Instant alerts for temporary route diversions or stop changes.</p>
+                        </div>
+                        <div class="preview-card">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <h4>Emergency Notices</h4>
+                            <p>Urgent campus-wide transport announcements.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-card" style="background: #eff6ff; border: none; text-align: center;">
+                <h4 style="color: var(--uu-blue); margin-bottom: 15px;">Want to stay updated?</h4>
+                <p style="margin-bottom: 20px;">We'll send you an email as soon as this feature goes live.</p>
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <input type="email" placeholder="Enter your university email"
+                        style="padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); width: 300px;">
+                    <button class="btn-save" style="margin-top:0;">Keep me posted</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    </script>
+</body>
+
+</html>

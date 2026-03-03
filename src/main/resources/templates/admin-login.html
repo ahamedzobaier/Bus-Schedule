@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UU Bus - Admin Portal</title>
+
+    <link rel="stylesheet" th:href="@{/css/admin-style.css}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+</head>
+
+<body class="admin-page">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <img th:src="@{/bluelogo.png}" alt="UU Logo" class="login-logo">
+                <div class="admin-tag">ADMINISTRATOR</div>
+                <h3>Transport Control Panel</h3>
+            </div>
+
+            <div th:if="${param.error}" class="error-box">
+                <i class="fas fa-shield-alt"></i>
+                <span>Unauthorized Access Attempt</span>
+            </div>
+
+            <form th:action="@{/admin/login}" method="post">
+                <div class="form-group">
+                    <label>Admin Identity</label>
+                    <div class="input-icon">
+                        <i class="fas fa-user-shield"></i>
+                        <input type="text" name="username" placeholder="Enter Admin ID" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Secure Password</label>
+                    <div class="input-icon">
+                        <i class="fas fa-key"></i>
+                        <input type="password" name="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-admin">AUTHORIZE ACCESS</button>
+            </form>
+
+            <div class="login-footer">
+                <a th:href="@{/login}"><i class="fas fa-arrow-left"></i> Return to Student Portal</a>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 Uttara University | Internal Systems
+        </div>
+    </div>
+</body>
+
+</html>

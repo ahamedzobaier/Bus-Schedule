@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - UU Bus</title>
+    <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Toast Notification Styles */
+        .toast-notification {
+            visibility: hidden;
+            min-width: 280px;
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            border-radius: 10px;
+            padding: 16px;
+            position: fixed;
+            z-index: 2000;
+            right: 30px;
+            bottom: 30px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.4s, bottom 0.4s, visibility 0.4s;
+        }
+
+        .toast-notification.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo-container">
+            <button class="menu-btn" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="/admin/dashboard" class="brand-logo">
+                <img th:src="@{/logo.png}" alt="UU Logo">
+                <span>UU Admin Panel</span>
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="/admin/logout" class="logout-link"><i class="fas fa-power-off"></i> Logout</a>
+        </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-header">
+                <h3>Control Center</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="/admin/dashboard" class="active"><i class="fas fa-bus"></i> Manage Schedules</a></li>
+                <li><a href="/admin/users"><i class="fas fa-users"></i> Manage Users</a></li>
+                <li><a href="/admin/location"><i class="fas fa-map-marker-alt"></i> Locations</a></li>
+                <hr>
+                <li><a href="/admin/logout" style="color: #ff4d4d;"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <div class="main-wrapper">
+        <div class="main-content">
+            <div class="admin-card">
+                <h3 class="section-title"><i class="fas fa-plus-circle"></i> Add New Schedule</h3>
+                <form th:action="@{/admin/add-schedule}" method="post">
+                    <div class="grid-form">
+                        <input type="text" name="busNumber" placeholder="Bus Number" required>
+                        <input type="text" name="startTime" placeholder="Start Time" required>
+                        <input type="text" name="arrivalTime" placeholder="Arrival Time" required>
+                        <input type="text" name="route" placeholder="Route Details" required>
+                        <input type="text" name="driverName" placeholder="Driver Name">
+                        <input type="text" name="contact" placeholder="Contact Number">
+                        <select name="dayOfWeek">
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                        </select>
+                        <select name="direction">
+                            <option value="UP">UP (To Campus)</option>
+                            <option value="DOWN">DOWN (From Campus)</option>
+                        </select>
+                        <select name="locationId">
+                            <option th:each="loc : ${locations}" th:value="${loc.id}" th:text="${loc.name}"></option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-save"><i class="fas fa-save"></i> Save Schedule</button>
+                </form>
+            </div>
+
+            <div class="admin-card">
+                <h3 class="section-title"><i class="fas fa-list"></i> Current Schedules</h3>
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="schedSearch" onkeyup="filterSchedules()" class="search-input"
+                        placeholder="Search by Day, Bus, Driver, Route...">
+                </div>
+
+                <div class="table-responsive">
+                    <table class="schedule-table" id="schedTable">
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Bus No</th>
+                                <th>Start</th>
+                                <th>Arrival</th>
+                                <th>Dir</th>
+                                <th>Route</th>
+                                <th>Driver</th>
+                                <th>Contact</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="s : ${schedules}">
+                                <form th:action="@{/admin/schedule/update}" method="post">
+                                    <input type="hidden" name="id" th:value="${s.id}">
+                                    <input type="hidden" name="locationId" th:value="${s.location.id}">
+                                    <td>
+                                        <select name="dayOfWeek" class="table-input day-select">
+                                            <option
+                                                th:each="day : ${ {'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'} }"
+                                                th:value="${day}" th:text="${day}" th:selected="${s.dayOfWeek == day}">
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" name="busNumber" th:value="${s.busNumber}"
+                                            class="table-input" style="width:60px"></td>
+                                    <td><input type="text" name="startTime" th:value="${s.startTime}"
+                                            class="table-input" style="width:80px"></td>
+                                    <td><input type="text" name="arrivalTime" th:value="${s.arrivalTime}"
+                                            class="table-input" style="width:80px"></td>
+                                    <td>
+                                        <select name="direction" class="table-input" style="width:75px">
+                                            <option value="UP" th:selected="${s.direction == 'UP'}">UP</option>
+                                            <option value="DOWN" th:selected="${s.direction == 'DOWN'}">DOWN</option>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" name="route" th:value="${s.route}" class="table-input"></td>
+                                    <td><input type="text" name="driverName" th:value="${s.driverName}"
+                                            class="table-input"></td>
+                                    <td><input type="text" name="contact" th:value="${s.contact}" class="table-input">
+                                    </td>
+                                    <td>
+                                        <div class="action-btns">
+                                            <button type="submit" class="btn-update-inline" title="Save Changes"><i
+                                                    class="fas fa-check"></i></button>
+                                            <a th:href="@{'/admin/delete-schedule/' + ${s.id}}"
+                                                class="btn-delete-inline"
+                                                onclick="return confirm('Delete this schedule?')">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </form>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast-notification"></div>
+
+    <script th:inline="javascript">
+        // Sidebar Toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Search Filter
+        function filterSchedules() {
+            let input = document.getElementById("schedSearch").value.toLowerCase();
+            let rows = document.getElementById("schedTable").getElementsByTagName("tr");
+            for (let i = 1; i < rows.length; i++) {
+                let rowData = rows[i].innerText.toLowerCase();
+                let inputs = rows[i].getElementsByTagName("input");
+                for (let inp of inputs) { rowData += " " + inp.value.toLowerCase(); }
+                let selects = rows[i].getElementsByTagName("select");
+                for (let sel of selects) { rowData += " " + sel.value.toLowerCase(); }
+                rows[i].style.display = rowData.includes(input) ? "" : "none";
+            }
+        }
+
+        // --- TOAST LOGIC ---
+        const msg = /*[[${message}]]*/ null;
+        const successMsg = /*[[${success}]]*/ null;
+
+        function showToast(text) {
+            const toast = document.getElementById("toast");
+            if (!toast) return;
+            toast.innerText = text;
+            toast.classList.add("show");
+            setTimeout(() => { toast.classList.remove("show"); }, 3000);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            if (msg && msg !== "null") showToast(msg);
+            else if (successMsg && successMsg !== "null") showToast(successMsg);
+        });
+    </script>
+</body>
+
+</html>

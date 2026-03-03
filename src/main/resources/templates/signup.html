@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UU Bus - Create Account</title>
+    <link rel="stylesheet" th:href="@{/css/signup.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="signup-page">
+
+    <div class="signup-container">
+        <div class="signup-card">
+            <div class="signup-header">
+                <img th:src="@{/bluelogo.png}" alt="Uttara University Logo" class="signup-logo">
+                <h3>Create Account</h3>
+                <p>Register for the Transport Management System</p>
+            </div>
+
+            <div th:if="${error}" class="error-box">
+                <i class="fas fa-exclamation-circle"></i>
+                <span th:text="${error}"></span>
+            </div>
+            <div th:if="${param.success}" class="success-box">
+                <i class="fas fa-check-circle"></i>
+                <span>Account created successfully! Please login below.</span>
+            </div>
+
+            <form th:action="@{/signup}" th:object="${user}" method="post">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <div class="input-icon">
+                        <i class="fas fa-id-badge"></i>
+                        <input type="text" th:field="*{name}" placeholder="Enter your full name" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>University ID</label>
+                    <div class="input-icon">
+                        <i class="fas fa-id-card"></i>
+                        <input type="text" th:field="*{universityId}" placeholder="Example: 2021-X-XX-XXX" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>University Email</label>
+                    <div class="input-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" th:field="*{email}" placeholder="yourname@uttarauniversity.edu.bd" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" th:field="*{password}" placeholder="Create a strong password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-signup">CREATE ACCOUNT</button>
+            </form>
+
+            <div class="signup-footer">
+                <p>Already have an account? <a href="/login">Sign In Instead</a></p>
+            </div>
+        </div>
+
+        <div class="copyright">
+            &copy; 2026 Uttara University. All rights reserved.
+        </div>
+    </div>
+
+</body>
+
+</html>

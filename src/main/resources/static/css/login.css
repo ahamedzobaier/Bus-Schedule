@@ -1,0 +1,230 @@
+/* login.css */
+
+:root {
+    --uu-blue: #003399;
+    --uu-hover: #00256e;
+    --uu-bg: #f4f7fe;
+    --uu-error: #dc3545;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body.login-page {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    /* Matching the Signup gradient */
+    background: linear-gradient(135deg, var(--uu-blue) 0%, #001a4d 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-card {
+    background: #ffffff;
+    width: 100%;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+/* Header & Logo */
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-logo {
+    height: 70px;
+    margin-bottom: 15px;
+}
+
+.login-header h3 {
+    color: var(--uu-blue);
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+}
+
+.login-header p {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+/* Error Box */
+.error-box {
+    background: #fff5f5;
+    color: var(--uu-error);
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--uu-error);
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #475569;
+}
+
+.input-icon {
+    position: relative;
+}
+
+.input-icon i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    transition: var(--transition);
+}
+
+.input-icon input {
+    width: 100%;
+    padding: 14px 15px 14px 45px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    outline: none;
+    background-color: #f8fafc;
+    transition: var(--transition);
+}
+
+.input-icon input:focus {
+    border-color: var(--uu-blue);
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(0, 51, 153, 0.1);
+}
+
+.input-icon input:focus+i {
+    color: var(--uu-blue);
+}
+
+/* Login Button */
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--uu-blue);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-login:hover {
+    background-color: var(--uu-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 51, 153, 0.3);
+}
+
+/* Footer Styling */
+.login-footer {
+    text-align: center;
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.login-footer p {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.login-footer a {
+    color: var(--uu-blue);
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+.forgot-pass {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+/* Copyright Section */
+.copyright {
+    margin-top: 30px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+    text-align: center;
+}
+/* Success Alert Box */
+.success-box {
+    background-color: #ecfdf5;
+    /* Light green bg */
+    color: #10b981;
+    /* Emerald green text */
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 4px solid #10b981;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn 0.4s ease-out;
+}
+
+.success-box i {
+    font-size: 1.1rem;
+}
+
+/* Subtle animation to grab attention */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 30px 20px;
+    }
+
+    .login-header h3 {
+        font-size: 1.2rem;
+    }
+}

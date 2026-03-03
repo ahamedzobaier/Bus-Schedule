@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - UU Bus Admin</title>
+    <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .toast-notification {
+    visibility: hidden;
+    min-width: 280px;
+    background-color: #28a745; /* Success Green */
+    color: white;
+    text-align: center;
+    border-radius: 10px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1000;
+    right: 30px;
+    bottom: 30px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.4s, bottom 0.4s;
+}
+
+.toast-notification.show {
+    visibility: visible;
+    opacity: 1;
+    bottom: 50px; /* Slides up slightly */
+}
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo-container">
+            <button class="menu-btn" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="/admin/dashboard" class="brand-logo">
+                <img th:src="@{/logo.png}" alt="UU Logo">
+                <span>UU Admin Panel</span>
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="/admin/logout" class="logout-link"><i class="fas fa-power-off"></i> Logout</a>
+        </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Control Center</h3>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="/admin/dashboard"><i class="fas fa-bus"></i> Manage Schedules</a></li>
+            <li><a href="/admin/users" class="active"><i class="fas fa-users"></i> Manage Users</a></li>
+            <li><a href="/admin/location"><i class="fas fa-map-marker-alt"></i> Locations</a></li>
+            <hr>
+            <li><a href="/admin/logout" style="color: var(--uu-danger);"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </li>
+        </ul>
+    </aside>
+
+    <div class="main-wrapper">
+        <div class="main-content">
+            <div class="admin-card">
+                <h3 class="section-title"><i class="fas fa-users-cog"></i> Registered Student Management</h3>
+
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="userSearch" onkeyup="filterUsers()" class="search-input"
+                        placeholder="Search by Name, ID, or Department...">
+                </div>
+
+                <div class="table-responsive">
+                    <table class="schedule-table" id="userTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">ID</th>
+                                <th>Student Name</th>
+                                <th>University ID</th>
+                                <th>Department</th>
+                                <th>Status</th>
+                                <th style="width: 120px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="u : ${users}">
+                                <form th:action="@{/admin/users/update}" method="post">
+                                    <input type="hidden" name="id" th:value="${u.id}">
+                                    <td th:text="${u.id}"></td>
+                                    <td><input type="text" name="name" th:value="${u.name}" class="table-input search-name" required></td>
+                                    <td><input type="text" name="universityId" th:value="${u.universityId}" class="table-input search-id"
+                                            required></td>
+                                    <td><input type="text" name="department" th:value="${u.department}" class="table-input search-dept"
+                                            required></td>
+                        
+                                    <td>
+                                        <span class="status-badge active">Active</span>
+                        
+                                    </td>
+                        
+                                    <td>
+                                        <div class="action-btns">
+                                            <button type="submit" class="btn-update-inline" title="Save Changes">
+                                                <i class="fas fa-save"></i>
+                                            </button>
+                                        
+                                            <a th:href="@{'/admin/users/delete/' + ${u.id}}" class="btn-delete-inline" onclick="return confirm('Are you sure?')">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </form>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="toast" class="toast-notification"></div>
+
+    <script>
+        // Sidebar Toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Search Filter
+        function filterUsers() {
+            let input = document.getElementById("userSearch").value.toLowerCase();
+            let rows = document.getElementById("userTable").getElementsByTagName("tr");
+
+            for (let i = 1; i < rows.length; i++) {
+                let name = rows[i].querySelector(".search-name")?.value.toLowerCase() || "";
+                let id = rows[i].querySelector(".search-id")?.value.toLowerCase() || "";
+                let dept = rows[i].querySelector(".search-dept")?.value.toLowerCase() || "";
+
+                if (name.includes(input) || id.includes(input) || dept.includes(input)) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+    <script th:inline="javascript">
+        /* Using Thymeleaf Natural Templates to keep the IDE happy */
+        const msg = /*[[${message}]]*/ null;
+
+        function showToast(text) {
+            const toast = document.getElementById("toast");
+            if (!toast) return;
+
+            toast.innerText = text;
+            toast.classList.add("show");
+
+            // Hide it after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+
+        // Run when the page loads
+        window.onload = function () {
+            if (msg) {
+                showToast(msg);
+            }
+        };
+    </script>
+</body>
+
+</html>
