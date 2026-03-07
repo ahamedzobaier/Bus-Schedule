@@ -95,20 +95,17 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    @GetMapping("/users/delete/{id}") // <--- Use GetMapping instead
+    @GetMapping("/users/delete/{id}")
     public String deleteUser(@PathVariable("id") Long id, RedirectAttributes ra, HttpSession session) {
-        if (session.getAttribute("admin") == null) {
+        if (!isAdminLoggedIn(session)) {
             return "redirect:/admin/login";
         }
 
-        if (id != null) {
-            try {
-                userRepo.deleteById(id);
-                ra.addFlashAttribute("message", "User deleted successfully!");
-            } catch (Exception e) {
-                // This triggers if the user is linked to a bus schedule
-                ra.addFlashAttribute("message", "Cannot delete: User is linked to other data.");
-            }
+        try {
+            userRepo.deleteById(id);
+            ra.addFlashAttribute("message", "User deleted successfully!");
+        } catch (Exception e) {
+            ra.addFlashAttribute("message", "Cannot delete: User is linked to other data.");
         }
         return "redirect:/admin/users";
     }
@@ -149,14 +146,18 @@ public class AdminController {
         return "redirect:/admin/location";
     }
 
-    @PostMapping("/location/delete/{id}")
-    public String deleteLocation(@PathVariable Long id, RedirectAttributes ra, HttpSession session) {
+    // FIXED: Only one GET mapping for delete to avoid 405 errors from links
+    @GetMapping("/location/delete/{id}")
+    public String deleteLocation(@PathVariable("id") Long id, RedirectAttributes ra, HttpSession session) {
         if (!isAdminLoggedIn(session)) {
             return "redirect:/admin/login";
         }
-        if (id != null) {
+
+        try {
             locationRepo.deleteById(id);
-            ra.addFlashAttribute("message", "Location deleted!");
+            ra.addFlashAttribute("message", "Location deleted successfully!");
+        } catch (Exception e) {
+            ra.addFlashAttribute("message", "Error: Location might be in use by a schedule.");
         }
         return "redirect:/admin/location";
     }
@@ -181,10 +182,8 @@ public class AdminController {
         if (!isAdminLoggedIn(session)) {
             return "redirect:/admin/login";
         }
-        if (id != null) {
-            scheduleRepo.deleteById(id);
-            ra.addFlashAttribute("message", "Schedule deleted!");
-        }
+        scheduleRepo.deleteById(id);
+        ra.addFlashAttribute("message", "Schedule deleted!");
         return "redirect:/admin/dashboard";
     }
 
