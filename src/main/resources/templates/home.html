@@ -16,39 +16,33 @@
             <button class="menu-btn" id="menu-toggle">
                 <i class="fas fa-bars"></i>
             </button>
-            <a href="/home" class="brand-logo">
+            <a th:href="@{/home}" class="brand-logo">
                 <img th:src="@{/logo.png}" alt="UU Logo">
                 <span>UU Transport</span>
             </a>
-            </div>
         </div>
-        
     </nav>
 
     <div class="sidebar-overlay" id="overlay"></div>
 
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-content">
-            <div class="sidebar-header">
-                <h3>Main Menu</h3>
-            </div>
-            <ul class="sidebar-menu">
-                <li><a href="/home" class="active"><i class="fas fa-th-large"></i> Dashboard</a></li>
-                <li><a href="/profile"><i class="fas fa-user"></i> My Profile</a></li>
-                <li><a href="/notifications"><i class="fas fa-bell"></i> Notifications</a></li>
-                <li><a href="/support"><i class="fas fa-headset"></i> Support</a></li>
-                <hr>
-                
-                
-                <li><a href="/logout" style="color: #ff4d4d;"><i class="fas fa-power-off"></i> Logout</a></li>
-            </ul>
+        <div class="sidebar-header">
+            <h3>Main Menu</h3>
         </div>
+        <ul class="sidebar-menu">
+            <li><a th:href="@{/home}" class="active"><i class="fas fa-th-large"></i> Dashboard</a></li>
+            <li><a th:href="@{/profile}"><i class="fas fa-user"></i> My Profile</a></li>
+            <li><a th:href="@{/notifications}"><i class="fas fa-bell"></i> Notifications</a></li>
+            <li><a th:href="@{/support}"><i class="fas fa-headset"></i> Support</a></li>
+            <hr>
+            <li><a th:href="@{/logout}" style="color: #ff4d4d;"><i class="fas fa-power-off"></i> Logout</a></li>
+        </ul>
     </aside>
 
     <div class="main-wrapper">
         <header class="hero">
             <h1>Welcome to UU Transport</h1>
-            <p>Reliable campus commuting at your fingertips. Choose your stand to see schedule.</p>
+            <p>Reliable campus commuting at your fingertips. Choose your stand to see the schedule.</p>
         </header>
 
         <main class="container">
@@ -60,7 +54,7 @@
             </div>
 
             <div th:if="${#lists.isEmpty(locations)}" class="empty-state">
-                <i class="fas fa-info-circle"></i> No locations available.
+                <i class="fas fa-info-circle"></i> No locations available at the moment.
             </div>
         </main>
 
@@ -71,17 +65,20 @@
 
     <script>
         const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
 
         menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
+            if (window.innerWidth > 1024) {
+                // Desktop: Toggle horizontal collapse
+                document.body.classList.toggle('sidebar-hidden');
+            } else {
+                // Mobile: Toggle slide-in overlay
+                document.body.classList.toggle('sidebar-active');
+            }
         });
 
         overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
+            document.body.classList.remove('sidebar-active');
         });
     </script>
 </body>

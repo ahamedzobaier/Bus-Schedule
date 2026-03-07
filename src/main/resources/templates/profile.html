@@ -119,18 +119,21 @@
 
     <script>
         const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
+            const overlay = document.getElementById('overlay');
 
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        });
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth > 1024) {
+                    // Desktop: Toggle horizontal collapse
+                    document.body.classList.toggle('sidebar-hidden');
+                } else {
+                    // Mobile: Toggle slide-in overlay
+                    document.body.classList.toggle('sidebar-active');
+                }
+            });
 
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
+            overlay.addEventListener('click', () => {
+                document.body.classList.remove('sidebar-active');
+            });
     </script>
 </body>
 

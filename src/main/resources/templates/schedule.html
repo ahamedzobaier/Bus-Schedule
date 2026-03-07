@@ -14,14 +14,11 @@
 
     <nav class="navbar">
         <div class="logo-container">
-            <button class="menu-btn" id="menu-toggle">
-                <i class="fas fa-bars"></i>
-            </button>
-        <a href="/home" class="brand-logo">
-            <img th:src="@{/logo.png}" alt="UU Logo">
-            <span>UU Transport</span>
-        </a>
-        </div>
+            <button class="menu-btn" id="menu-toggle"><i class="fas fa-bars"></i></button>
+            <a href="/home" class="brand-logo">
+                <img th:src="@{/logo.png}" alt="UU Logo">
+                <span>UU Transport</span>
+            </a>
         </div>
     </nav>
 
@@ -34,9 +31,8 @@
             </div>
             <ul class="sidebar-menu">
                 <li><a href="/home"><i class="fas fa-th-large"></i> Dashboard</a></li>
-                <li><a href="/profile" class="active"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="/profile"><i class="fas fa-user"></i> My Profile</a></li>
                 <li><a href="/notifications"><i class="fas fa-bell"></i> Notifications</a></li>
-                <li><a href="/support"><i class="fas fa-headset"></i> Support</a></li>
                 <hr>
                 <li><a href="/logout" style="color: #ff4d4d;"><i class="fas fa-power-off"></i> Logout</a></li>
             </ul>
@@ -49,77 +45,132 @@
         </div>
 
         <main class="container">
-            <div class="day-tabs">
+            <div class="schedule-tabs">
+                <button class="tab-btn active" onclick="switchTab('up', this)">Up Time</button>
+                <button class="tab-btn" onclick="switchTab('down', this)">Down Time</button>
+            </div>
+
+            <div class="day-chips">
                 <a th:each="day : ${days}" th:href="@{'/schedule/' + ${locationName}(day=${day})}" th:text="${day}"
-                    th:classappend="${day == currentDay} ? 'active' : ''" class="day-link"></a>
+                    th:classappend="${day == currentDay} ? 'active-day' : ''" class="day-chip"></a>
             </div>
 
-            <div class="print-section">
-                <button onclick="window.print()" class="btn-print">
-                    <i class="fas fa-print"></i> Download/Print PDF
-                </button>
+            <div class="date-header">
+                <h2 th:text="${currentDay}">Sunday</h2>
+                <p th:text="${#temporals.format(#temporals.createToday(), 'dd MMMM yyyy')}"></p>
             </div>
 
-            <div class="table-card">
-                <h2><i class="fas fa-arrow-up"></i> UP-TIME (To University)</h2>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Bus No</th>
-                                <th>Start Time</th>
-                                <th>Route</th>
-                                <th>Arrival</th>
-                                <th>Driver</th>
-                                <th>Contact</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="s : ${upSchedules}">
-                                <td data-label="Bus No" th:text="${s.busNumber}"></td>
-                                <td data-label="Start Time" th:text="${s.startTime}"></td>
-                                <td data-label="Route" th:text="${s.route}"></td>
-                                <td data-label="Arrival" th:text="${s.arrivalTime}"></td>
-                                <td data-label="Driver" th:text="${s.driverName}"></td>
-                                <td data-label="Contact" th:text="${s.contact}"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div id="up-section" class="tab-content">
+                <div th:each="s : ${upSchedules}" class="bus-card">
+                    <div class="card-header blue-header">
+                        <div class="bus-id">
+                            <i class="fas fa-bus"></i> <span th:text="${s.busNumber}"></span>
+                            <span th:if="${s.liveTrackingUrl != null}" class="live-badge">
+                                <span class="pulse-dot"></span> LIVE
+                            </span>
+                        </div>
+                        <div class="header-date">To University</div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="route-visual">
+                            <span class="loc-label" th:text="${s.location.name}"></span>
+                            <div class="path-container">
+                                <div class="path-dot"></div>
+                                <div class="path-line"></div>
+                                <i class="fas fa-bus-side"></i>
+                                <div class="path-line"></div>
+                                <div class="path-dot"></div>
+                            </div>
+                            <span class="loc-label">UU Campus</span>
+                        </div>
+
+                        <div class="card-details">
+                            <div class="detail"><i class="fas fa-clock"></i> <span>Start: <strong
+                                        th:text="${s.startTime}"></strong></span></div>
+                            <div class="detail"><i class="fas fa-flag-checkered"></i> <span>Arrival: <strong
+                                        th:text="${s.arrivalTime}"></strong></span></div>
+                            <div class="detail"><i class="fas fa-user-circle"></i> <span>Driver: <strong
+                                        th:text="${s.driverName}"></strong></span></div>
+                            <div class="detail"><i class="fas fa-phone-alt"></i> <span>Contact: <strong
+                                        th:text="${s.contact}"></strong></span></div>
+                        </div>
+
+                        <div class="tracking-footer">
+                            <a th:if="${s.liveTrackingUrl != null}" th:href="${s.liveTrackingUrl}" target="_blank"
+                                class="btn-live">
+                                <i class="fas fa-location-arrow"></i> Track Live Location
+                            </a>
+                            <div th:unless="${s.liveTrackingUrl != null}" class="no-live">
+                                <i class="fas fa-info-circle"></i> Tracking not started
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <div th:if="${#lists.isEmpty(upSchedules)}" class="empty-msg">No buses for this direction.</div>
             </div>
 
-            <div class="table-card" style="margin-top: 40px;">
-                <h2><i class="fas fa-arrow-down"></i> DOWN-TIME (From University)</h2>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Bus No</th>
-                                <th>Start Time</th>
-                                <th>Route</th>
-                                <th>Arrival</th>
-                                <th>Driver</th>
-                                <th>Contact</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="s : ${downSchedules}">
-                                <td data-label="Bus No" th:text="${s.busNumber}"></td>
-                                <td data-label="Start Time" th:text="${s.startTime}"></td>
-                                <td data-label="Route" th:text="${s.route}"></td>
-                                <td data-label="Arrival" th:text="${s.arrivalTime}"></td>
-                                <td data-label="Driver" th:text="${s.driverName}"></td>
-                                <td data-label="Contact" th:text="${s.contact}"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div id="down-section" class="tab-content" style="display:none;">
+                <div th:each="s : ${downSchedules}" class="bus-card">
+                    <div class="card-header red-header">
+                        <div class="bus-id">
+                            <i class="fas fa-bus"></i> <span th:text="${s.busNumber}"></span>
+                            <span th:if="${s.liveTrackingUrl != null}" class="live-badge">
+                                <span class="pulse-dot"></span> LIVE
+                            </span>
+                        </div>
+                        <div class="header-date">From University</div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="route-visual">
+                            <span class="loc-label">UU Campus</span>
+                            <div class="path-container">
+                                <div class="path-dot red-dot"></div>
+                                <div class="path-line"></div>
+                                <i class="fas fa-bus-side" style="color:#dc3545"></i>
+                                <div class="path-line"></div>
+                                <div class="path-dot red-dot"></div>
+                            </div>
+                            <span class="loc-label" th:text="${s.location.name}"></span>
+                        </div>
+
+                        <div class="card-details">
+                            <div class="detail"><i class="fas fa-clock"></i> <span>Start: <strong
+                                        th:text="${s.startTime}"></strong></span></div>
+                            <div class="detail"><i class="fas fa-flag-checkered"></i> <span>Arrival: <strong
+                                        th:text="${s.arrivalTime}"></strong></span></div>
+                            <div class="detail"><i class="fas fa-user-circle"></i> <span>Driver: <strong
+                                        th:text="${s.driverName}"></strong></span></div>
+                            <div class="detail"><i class="fas fa-phone-alt"></i> <span>Contact: <strong
+                                        th:text="${s.contact}"></strong></span></div>
+                        </div>
+
+                        <div class="tracking-footer">
+                            <a th:if="${s.liveTrackingUrl != null}" th:href="${s.liveTrackingUrl}" target="_blank"
+                                class="btn-live">
+                                <i class="fas fa-location-arrow"></i> Track Live Location
+                            </a>
+                            <div th:unless="${s.liveTrackingUrl != null}" class="no-live">
+                                <i class="fas fa-info-circle"></i> Tracking not started
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <div th:if="${#lists.isEmpty(downSchedules)}" class="empty-msg">No buses for this direction.</div>
             </div>
         </main>
 
+        <div class="print-section" style="text-align: center; margin-bottom: 20px;">
+            <button onclick="window.print()" class="btn-print"
+                style="padding: 10px 20px; cursor: pointer; border-radius: 8px; background: #475569; color: white; border: none;">
+                <i class="fas fa-print"></i> Download/Print PDF
+            </button>
+        </div>
+
         <div class="pdf-footer">
             <hr>
-            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #666;">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #666; padding: 0 20px;">
                 <p>Uttara University Transport Dept.</p>
                 <p th:text="'Generated: ' + ${#temporals.format(#temporals.createNow(), 'dd MMM yyyy')}"></p>
             </div>
@@ -127,19 +178,31 @@
     </div>
 
     <script>
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
+        // Tab Toggling
+        function switchTab(type, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('up-section').style.display = (type === 'up') ? 'block' : 'none';
+            document.getElementById('down-section').style.display = (type === 'down') ? 'block' : 'none';
+        }
 
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        });
+        // Sidebar Toggle
+         const menuToggle = document.getElementById('menu-toggle');
+            const overlay = document.getElementById('overlay');
 
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth > 1024) {
+                    // Desktop: Toggle horizontal collapse
+                    document.body.classList.toggle('sidebar-hidden');
+                } else {
+                    // Mobile: Toggle slide-in overlay
+                    document.body.classList.toggle('sidebar-active');
+                }
+            });
+
+            overlay.addEventListener('click', () => {
+                document.body.classList.remove('sidebar-active');
+            });
     </script>
 </body>
 

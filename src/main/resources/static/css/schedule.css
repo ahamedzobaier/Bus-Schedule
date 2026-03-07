@@ -2,206 +2,402 @@
 
 :root {
     --uu-blue: #003399;
-    /* Define if not inherited */
+    --uu-red: #dc3545;
+    --uu-hover: #00256e;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --success-emerald: #10b981;
 }
 
+/* =========================================
+   PAGE TITLE SECTION
+   ========================================= */
 .nav-bar-title {
-    background: #e9ecef;
+    background: white;
     color: var(--uu-blue);
-    padding: 20px;
+    padding: 30px 20px;
     text-align: center;
     border-radius: 12px;
     margin: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .nav-bar-title h1 {
     margin: 0;
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+/* =========================================
+   DIRECTION TABS (Up/Down)
+   ========================================= */
+.schedule-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 25px 0;
+}
+
+.tab-btn {
+    padding: 12px 28px;
+    border-radius: 30px;
+    border: none;
+    background: #cbd5e1;
+    color: #475569;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+    background: var(--uu-blue);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 51, 153, 0.3);
+}
+
+/* =========================================
+   MODERN DAY SELECTION CHIPS
+   ========================================= */
+.day-chips {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 15px 20px 25px 20px;
+    /* Extra bottom padding for the shadow */
+    justify-content: flex-start;
+    /* Natural left-to-right swipe */
+    -webkit-overflow-scrolling: touch;
+    /* Smooth swipe on iOS */
+    scrollbar-width: none;
+    /* Hide scrollbar for Firefox */
+    scroll-behavior: smooth;
+}
+
+.day-chips::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar for Chrome/Safari */
+}
+
+.day-chip {
+    padding: 10px 24px;
+    border-radius: 30px;
+    border: 1px solid var(--border);
+    background: #ffffff;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    min-height: 44px;
+    /* Ensure a minimum height for mobile touch targets */
+    display: flex;
+    align-items: center;
+}
+
+.day-chip:hover {
+    border-color: #cbd5e1;
+    background: #f8fafc;
+    transform: translateY(-1px);
+}
+
+.day-chip.active-day {
+    background: var(--uu-blue);
+    border-color: var(--uu-blue);
+    color: white;
+    box-shadow: 0 8px 20px rgba(0, 51, 153, 0.25);
+    transform: translateY(-3px);
+    /* Makes the active day 'pop' up */
+}
+
+/* =========================================
+   DATE HEADER
+   ========================================= */
+.date-header {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.date-header h2 {
+    margin: 0;
+    color: #1e293b;
     font-size: 1.5rem;
 }
 
-/* Enhanced Table Card */
-.table-card {
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0, 51, 153, 0.08);
-    /* Better depth */
-    margin-bottom: 30px;
-    border: 1px solid #eef2f6;
-    overflow: hidden;
+.date-header p {
+    margin: 5px 0 0;
+    color: var(--text-muted);
 }
 
-.table-card h2 {
-    font-size: 1.25rem;
-    margin-top: 0;
-    margin-bottom: 20px;
+/* =========================================
+   BUS CARD DESIGN
+   ========================================= */
+.bus-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+    border: 1px solid var(--border);
+    transition: transform 0.3s ease;
+}
+
+.card-header {
+    padding: 15px 20px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.blue-header {
+    background: var(--uu-blue);
+}
+
+.red-header {
+    background: var(--uu-red);
+}
+
+.bus-id {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: var(--uu-blue);
+    font-weight: 700;
+    font-size: 1.1rem;
 }
 
-/* Day Tabs / Navigation */
-.day-tabs {
+/* =========================================
+   LIVE PULSE ANIMATION
+   ========================================= */
+.live-badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
     display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 1px;
+}
+
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: #ff4d4d;
+    border-radius: 50%;
+    animation: live-pulse 1.5s infinite;
+}
+
+@keyframes live-pulse {
+    0% {
+        box-shadow: 0 0 0 0px rgba(255, 77, 77, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 77, 77, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0px rgba(255, 77, 77, 0);
+    }
+}
+
+/* =========================================
+   ROUTE VISUAL TIMELINE
+   ========================================= */
+.route-visual {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px 25px;
+    background: #f8fafc;
+}
+
+.loc-label {
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: #1e293b;
+    width: 90px;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.path-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    margin: 0 15px;
+}
+
+.path-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--uu-blue);
+    border-radius: 50%;
+}
+
+.red-dot {
+    background: var(--uu-red);
+}
+
+.path-line {
+    height: 2px;
+    background: #cbd5e1;
+    flex-grow: 1;
+}
+
+.path-container i {
+    margin: 0 12px;
+    color: var(--uu-blue);
+    font-size: 1.2rem;
+}
+
+/* =========================================
+   BUS DETAILS GRID
+   ========================================= */
+.card-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 25px;
+}
+
+.detail {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.detail i {
+    color: var(--uu-blue);
+    font-size: 1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.detail strong {
+    color: #1e293b;
+    margin-left: 4px;
+}
+
+/* =========================================
+   TRACKING FOOTER
+   ========================================= */
+.tracking-footer {
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    background: #ffffff;
+}
+
+.btn-live {
+    display: flex;
+    align-items: center;
     justify-content: center;
     gap: 10px;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-}
-
-.day-link {
+    background: var(--success-emerald);
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
     text-decoration: none;
-    padding: 8px 16px;
-    border: 1px solid var(--uu-blue);
-    color: var(--uu-blue);
-    border-radius: 20px;
-    font-weight: 600;
-    transition: 0.3s;
-}
-
-.day-link.active {
-    background: var(--uu-blue);
-    color: white;
-}
-
-/* Action Buttons */
-.btn-print {
-    background: #10b981;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    margin-bottom: 20px;
-    transition: 0.3s;
-}
-
-.btn-print:hover {
-    background:#003399;
-}
-
-/* Table Styling (Desktop) */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-th {
-    background: #f8fafc;
-    color: #64748b;
     font-weight: 700;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    padding: 15px;
-    border-bottom: 2px solid #edf2f7;
-    text-align: left;
+    font-size: 0.95rem;
+    transition: 0.3s ease;
 }
 
-td {
-    padding: 15px;
-    border-bottom: 1px solid #edf2f7;
-    color: #1e293b;
-    font-size: 0.9rem;
+.btn-live:hover {
+    background: #059669;
+    transform: translateY(-2px);
 }
 
-tr {
-    transition: background 0.2s ease;
+.no-live {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    font-style: italic;
 }
 
-tr:hover {
-    background: #f0f4ff !important;
+/* =========================================
+   EMPTY STATE MESSAGE
+   ========================================= */
+.empty-msg {
+    text-align: center;
+    padding: 50px;
+    color: var(--text-muted);
+    background: white;
+    border-radius: 12px;
+    border: 2px dashed var(--border);
 }
 
-/* Mobile Table Cards (Responsive) */
-@media (max-width: 768px) {
-
-    .table-responsive table,
-    thead,
-    tbody,
-    th,
-    td,
-    tr {
-        display: block;
-    }
-
-    thead tr {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-    }
-
-    tr {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        border: 1px solid #dee2e6;
-        margin-bottom: 15px;
-        padding: 10px 0;
-        background: #ffffff;
-        border-radius: 8px;
-    }
-
-    td {
-        border: none;
-        position: relative;
-        padding-left: 50%;
-        text-align: right;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid #f8fafc;
-    }
-
-    td:last-child {
-        border-bottom: none;
-    }
-
-    td:before {
-        content: attr(data-label);
-        /* Requires data-label in HTML */
-        position: absolute;
-        left: 15px;
-        width: 45%;
-        text-align: left;
-        font-weight: 700;
-        color: var(--uu-blue);
-    }
-}
-
-/* Print Styling */
-.pdf-footer {
-    display: none;
-}
-
+/* =========================================
+   PRINT STYLING
+   ========================================= */
 @media print {
 
     .navbar,
     .sidebar,
-    .sidebar-overlay,
-    .btn-print,
-    .day-tabs {
-        display: all !important;
+    .menu-btn,
+    .schedule-tabs,
+    .day-chips,
+    .print-section,
+    .btn-live {
+        display: none !important;
     }
 
     .main-wrapper {
-        margin: 0 !important;
-        padding: 0 !important;
+        margin: 0;
+        padding: 0;
     }
 
-    .table-card {
+    .bus-card {
         box-shadow: none;
-        border: 1px solid #000;
-    }
-
-    th,
-    td {
-        border: 1px solid #000;
-        color: black;
+        border: 1px solid #ccc;
+        break-inside: avoid;
     }
 
     .pdf-footer {
         display: block !important;
-        text-align: center;
-        margin-top: 40px;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+}
+
+/* =========================================
+   MOBILE RESPONSIVENESS
+   ========================================= */
+@media (max-width: 600px) {
+
+    /* Adjust Day Chips for Mobile */
+    .day-chips {
+        padding: 10px 15px 20px 15px;
+        gap: 10px;
+    }
+
+    .day-chip {
+        padding: 8px 20px;
+        font-size: 0.9rem;
+        min-height: 40px;
+    }
+
+    /* Stack card details */
+    .card-details {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .route-visual {
+        padding: 20px 10px;
+    }
+
+    .loc-label {
+        font-size: 0.8rem;
+        width: 70px;
+    }
+
+    .nav-bar-title h1 {
+        font-size: 1.3rem;
     }
 }

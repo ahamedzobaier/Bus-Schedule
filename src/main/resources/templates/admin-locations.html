@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Locations - UU Bus Admin</title>
     <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
-    <link rel="stylesheet" th:href="@{/css/core.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
@@ -14,16 +13,14 @@
 
     <nav class="navbar">
         <div class="logo-container">
-            <button class="menu-btn" id="menu-toggle">
-                <i class="fas fa-bars"></i>
-            </button>
-            <a href="/admin/dashboard" class="brand-logo">
+            <button class="menu-btn" id="menu-toggle"><i class="fas fa-bars"></i></button>
+            <a th:href="@{/admin/dashboard}" class="brand-logo">
                 <img th:src="@{/logo.png}" alt="UU Logo">
                 <span>UU Admin Panel</span>
             </a>
         </div>
         <div class="nav-links">
-            <a href="/admin/logout" class="logout-link"><i class="fas fa-power-off"></i> Logout</a>
+            <a th:href="@{/admin/logout}" class="logout-link"><i class="fas fa-power-off"></i> Logout</a>
         </div>
     </nav>
 
@@ -33,14 +30,14 @@
         <div class="sidebar-header">
             <h3>Control Center</h3>
         </div>
-        <ul class="sidebar-menu">
-            <li><a href="/admin/dashboard"><i class="fas fa-bus"></i> Manage Schedules</a></li>
-            <li><a href="/admin/users"><i class="fas fa-users"></i> Manage Users</a></li>
-            <li><a href="/admin/location" class="active"><i class="fas fa-map-marker-alt"></i> Locations</a></li>
-            <hr>
-            <li><a href="/admin/logout" style="color: var(--uu-danger);"><i class="fas fa-sign-out-alt"></i> Logout</a>
-            </li>
-        </ul>
+         <ul class="sidebar-menu">
+                <li><a href="/admin/dashboard"><i class="fas fa-bus"></i> Manage Schedules</a></li>
+                <li><a href="/admin/users"><i class="fas fa-users"></i> Manage Users</a></li>
+                <li><a href="/admin/location" class="active"><i class="fas fa-map-marker-alt"></i> Locations</a></li>
+                <li><a th:href="@{/admin/support}" ><i class="fas fa-headset"></i> Support & Feedback</a></li>
+                <hr>
+                <li><a href="/admin/logout" style="color: #ff4d4d;"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
     </aside>
 
     <div class="main-wrapper">
@@ -75,95 +72,81 @@
                     </thead>
                     <tbody>
                         <tr th:each="loc : ${locations}">
-                            <form th:action="@{/admin/location/update}" method="post">
-                                <input type="hidden" name="id" th:value="${loc.id}">
-                                <td th:text="${loc.id}"></td>
-                                <td>
-                                    <input type="text" name="name" th:value="${loc.name}"
-                                        class="table-input loc-name-input" required>
-                                </td>
-                                <td>
-                                    <div class="action-btns">
-                                        <button type="submit" class="btn-update-inline" title="Update Name">
+                            <td th:text="${loc.id}"></td>
+                            <td>
+                                <input type="text" th:id="'display-name-' + ${loc.id}" th:value="${loc.name}"
+                                    class="table-input loc-name-input" required>
+                            </td>
+                            <td>
+                                <div class="action-btns">
+                                    <form th:action="@{/admin/location/update}" method="post" style="display:inline;">
+                                        <input type="hidden" name="id" th:value="${loc.id}">
+                                        <input type="hidden" th:id="'hidden-name-' + ${loc.id}" name="name"
+                                            th:value="${loc.name}">
+
+                                        <button type="submit" class="btn-update-inline" title="Update"
+                                            th:onclick="'document.getElementById(\'hidden-name-\' + ' + ${loc.id} + ').value = document.getElementById(\'display-name-\' + ' + ${loc.id} + ').value'">
                                             <i class="fas fa-check"></i>
                                         </button>
-                                        <a th:href="@{'/admin/location/delete/' + ${loc.id}}" class="btn-delete-inline"
-                                            onclick="return confirm('Deleting a location will affect all bus schedules tied to it. Proceed?')">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </form>
+                                    </form>
+
+                                    <a th:href="@{'/admin/location/delete/' + ${loc.id}}" class="btn-delete-inline"
+                                        onclick="return confirm('Deleting this location will affect all bus schedules. Proceed?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
     <div id="toast" class="toast-notification">Action completed successfully!</div>
 
-    <script>
-        // Sidebar Toggle Logic
+    <script th:inline="javascript">
+        // 1. Sidebar Logic
         const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-
         menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
+            if (window.innerWidth > 1024) {
+                document.body.classList.toggle('sidebar-hidden');
+            } else {
+                document.body.classList.toggle('sidebar-active');
+            }
         });
 
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
+        document.getElementById('overlay').addEventListener('click', () => {
+            document.body.classList.remove('sidebar-active');
         });
-    
-        // Search Filter Logic
+
+        // 2. Search Logic
         function filterLocations() {
             let input = document.getElementById("locSearch").value.toLowerCase();
-            let table = document.getElementById("locTable");
-            let tr = table.getElementsByTagName("tr");
-
+            let tr = document.getElementById("locTable").getElementsByTagName("tr");
             for (let i = 1; i < tr.length; i++) {
                 let nameField = tr[i].querySelector(".loc-name-input");
                 if (nameField) {
-                    let nameValue = nameField.value.toLowerCase();
-                    tr[i].style.display = nameValue.includes(input) ? "" : "none";
+                    tr[i].style.display = nameField.value.toLowerCase().includes(input) ? "" : "none";
                 }
             }
         }
-    </script>
-    <script th:inline="javascript">
-        /* The syntax below uses 'natural templates'. 
-           The value after the comment is a fallback for the IDE. 
-        */
+
+        // 3. Toast/Message Logic
         const msg = /*[[${message}]]*/ null;
         const successMsg = /*[[${success}]]*/ null;
 
         function showToast(text, isError = false) {
             const toast = document.getElementById("toast");
-            if (!toast) return; // Safety check
-
             toast.innerText = text;
-
-            // Change color based on type
-            if (isError) {
-                toast.style.backgroundColor = "var(--uu-danger)";
-            } else {
-                toast.style.backgroundColor = "var(--uu-success)";
-            }
-
+            toast.style.backgroundColor = isError ? "var(--uu-danger)" : "var(--uu-success)";
             toast.classList.add("show");
-
-            setTimeout(() => {
-                toast.classList.remove("show");
-            }, 3000);
+            setTimeout(() => toast.classList.remove("show"), 3000);
         }
 
-        // Trigger on page load if message exists
-        window.onload = function () {
-            if (msg) showToast(msg);
-            else if (successMsg) showToast(successMsg);
+        window.onload = () => {
+            if (msg) showToast(msg, true);
+            if (successMsg) showToast(successMsg);
         };
     </script>
 </body>

@@ -58,12 +58,12 @@
             <h3>Control Center</h3>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="/admin/dashboard"><i class="fas fa-bus"></i> Manage Schedules</a></li>
+            <li><a href="/admin/dashboard" ><i class="fas fa-bus"></i> Manage Schedules</a></li>
             <li><a href="/admin/users" class="active"><i class="fas fa-users"></i> Manage Users</a></li>
             <li><a href="/admin/location"><i class="fas fa-map-marker-alt"></i> Locations</a></li>
+            <li><a th:href="@{/admin/support}"><i class="fas fa-headset"></i> Support & Feedback</a></li>
             <hr>
-            <li><a href="/admin/logout" style="color: var(--uu-danger);"><i class="fas fa-sign-out-alt"></i> Logout</a>
-            </li>
+            <li><a href="/admin/logout" style="color: #ff4d4d;"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </aside>
 
@@ -129,19 +129,17 @@
 
     <script>
         // Sidebar Toggle
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        });
-
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
+        // Sidebar Control
+            const menuToggle = document.getElementById('menu-toggle');
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth > 1024) {
+                    // Desktop: Slide away and expand content
+                    document.body.classList.toggle('sidebar-hidden');
+                } else {
+                    // Mobile: Slide in as an overlay
+                    document.body.classList.toggle('sidebar-active');
+                }
+            });
 
         // Search Filter
         function filterUsers() {

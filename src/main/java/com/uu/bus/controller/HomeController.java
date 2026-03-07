@@ -48,8 +48,9 @@ public class HomeController {
         return "notifications";
     }
 
-    @GetMapping("/support")
-    public String showSupport(HttpSession session) {
+    @GetMapping
+    public String showSupportPage(HttpSession session, Model model) {
+        // Check if either a user or admin is logged in
         if (session.getAttribute("user") == null && session.getAttribute("admin") == null) {
             return "redirect:/login";
         }

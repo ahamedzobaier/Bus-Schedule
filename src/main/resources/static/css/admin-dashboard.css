@@ -72,16 +72,21 @@ body {
 }
 
 .menu-btn {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.15);
     border: none;
     color: white;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     cursor: pointer;
-    display: none;
-    /* Hidden on Desktop */
+    display: flex;
     padding: 8px;
     transition: background 0.2s;
     border-radius: 6px;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
 }
 
 .logout-link {
@@ -97,7 +102,7 @@ body {
 }
 
 /* =========================================
-   3. SIDEBAR & OVERLAY
+   3. SIDEBAR & OVERLAY LOGIC
    ========================================= */
 .sidebar {
     width: var(--sidebar-width);
@@ -110,6 +115,15 @@ body {
     border-right: 1px solid var(--border-color);
     padding: calc(var(--nav-height) + 20px) 15px 25px;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Toggle Logic for Desktop */
+body.sidebar-hidden .sidebar {
+    transform: translateX(-100%);
+}
+
+body.sidebar-hidden .main-wrapper {
+    margin-left: 0;
 }
 
 .sidebar-overlay {
@@ -198,48 +212,47 @@ hr {
 }
 
 /* =========================================
-   5. FORMS & INPUTS
+   5. LIVE LOCATION (BROADCAST) STYLING
    ========================================= */
-.grid-form {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 15px;
+.live-link-container {
+    grid-column: 1 / -1;
+    background: #fff5f5;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px dashed #dc3545;
+    margin-top: 15px;
 }
 
-.grid-form input,
-.grid-form select {
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    outline: none;
-    font-size: 14px;
-    transition: border-color 0.2s;
-}
-
-.grid-form input:focus,
-.grid-form select:focus {
-    border-color: var(--uu-blue);
-}
-
-.btn-save {
-    background: var(--uu-success);
-    color: white;
-    border: none;
-    padding: 12px 28px;
-    border-radius: 8px;
-    font-weight: 600;
-    margin-top: 20px;
-    cursor: pointer;
-    transition: 0.3s;
-    display: inline-flex;
+.live-link-container label {
+    color: #dc3545;
+    font-weight: 800;
+    display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
 }
 
-.btn-save:hover {
-    background: #218838;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+.fa-broadcast-tower {
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+    0% {
+        transform: scale(0.95);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(0.95);
+        opacity: 1;
+    }
 }
 
 /* =========================================
@@ -297,14 +310,10 @@ hr {
 .table-input {
     width: 100%;
     padding: 8px;
-    border: 1px solid transparent;
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     background: #f8fafc;
     transition: all 0.2s ease;
-}
-
-.table-input:hover {
-    background: #edf2f7;
 }
 
 .table-input:focus {
@@ -312,6 +321,10 @@ hr {
     background: white;
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 51, 153, 0.1);
+}
+
+.url-input-table {
+    border-bottom: 2px solid var(--uu-success) !important;
 }
 
 /* =========================================
@@ -346,9 +359,8 @@ hr {
     justify-content: center;
     border-radius: 8px;
     cursor: pointer;
-    text-decoration: none;
-    transition: 0.2s;
     border: none;
+    transition: 0.2s;
 }
 
 .btn-update-inline {
@@ -385,50 +397,71 @@ hr {
     position: fixed;
     z-index: 2000;
     right: 30px;
-    bottom: 30px;
+    bottom: -100px;
+    /* Hidden state */
     font-weight: 600;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     opacity: 0;
-    transition: opacity 0.4s, bottom 0.4s, visibility 0.4s;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .toast-notification.show {
     visibility: visible;
     opacity: 1;
     bottom: 50px;
-    animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateY(100px);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
 }
 
 /* =========================================
-   9. MOBILE RESPONSIVENESS
+   9. FORMS & BUTTONS
+   ========================================= */
+.grid-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.grid-form input,
+.grid-form select {
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+}
+
+.btn-save {
+    background: var(--uu-success);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-top: 20px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.btn-save:hover {
+    background: #218838;
+    transform: translateY(-1px);
+}
+
+/* =========================================
+   10. MOBILE RESPONSIVENESS
    ========================================= */
 @media (max-width: 1024px) {
-    .menu-btn {
-        display: flex;
-    }
-
     .sidebar {
         transform: translateX(-100%);
-        padding-top: 30px;
     }
 
-    .sidebar.active {
+    body.sidebar-active .sidebar {
         transform: translateX(0);
     }
 
-    .sidebar-overlay.active {
+    body.sidebar-active .sidebar-overlay {
         display: block;
     }
 

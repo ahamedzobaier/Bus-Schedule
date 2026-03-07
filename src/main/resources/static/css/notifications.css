@@ -1,0 +1,162 @@
+ :root {
+     --uu-blue: #003399;
+     --border-color: #e2e8f0;
+ }
+
+ /* Notification List Styling */
+ /* Container Styling */
+ .notification-container {
+     background: #ffffff;
+     border-radius: 12px;
+     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+     border: 1px solid #e2e8f0;
+     overflow: hidden;
+ }
+
+ .notif-header {
+     padding: 20px 25px;
+     border-bottom: 1px solid #f1f5f9;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     background: #ffffff;
+ }
+
+ .notif-header h3 {
+     color: #003399;
+     /* UU Blue */
+     margin: 0;
+     font-size: 1.2rem;
+ }
+
+ .notif-badge {
+     background: #003399;
+     color: white;
+     padding: 4px 12px;
+     border-radius: 20px;
+     font-size: 0.8rem;
+     font-weight: bold;
+ }
+
+ /* Base Notification Item */
+ .notif-item {
+     display: flex;
+     gap: 15px;
+     padding: 20px 25px;
+     border-bottom: 1px solid #f8fafc;
+     border-left: 4px solid transparent;
+     transition: background 0.2s ease;
+ }
+
+ .notif-item:last-child {
+     border-bottom: none;
+ }
+
+ .notif-item:hover {
+     background-color: #f8fafc;
+ }
+
+ /* Icon Styling */
+ .notif-icon-wrapper {
+     width: 45px;
+     height: 45px;
+     border-radius: 10px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     font-size: 1.2rem;
+     flex-shrink: 0;
+ }
+
+ /* Detail Styling */
+ .notif-details {
+     flex-grow: 1;
+ }
+
+ .notif-top {
+     display: flex;
+     justify-content: space-between;
+     margin-bottom: 5px;
+ }
+
+ .notif-category {
+     font-size: 0.75rem;
+     font-weight: bold;
+     text-transform: uppercase;
+     letter-spacing: 0.5px;
+ }
+
+ .notif-time {
+     font-size: 0.75rem;
+     color: #94a3b8;
+ }
+
+ .notif-details h4 {
+     margin: 0 0 5px 0;
+     font-size: 1rem;
+     color: #1e293b;
+ }
+
+ .notif-details p {
+     margin: 0;
+     font-size: 0.9rem;
+     color: #64748b;
+     line-height: 1.5;
+ }
+
+ /* --- Notification Types --- */
+
+ /* Success - Green */
+ .type-success {
+     border-left-color: #10b981;
+ }
+
+ .type-success .notif-icon-wrapper {
+     background: #ecfdf5;
+     color: #10b981;
+ }
+
+ .type-success .notif-category {
+     color: #059669;
+ }
+
+ /* Warning - Amber/Yellow */
+ .type-warning {
+     border-left-color: #f59e0b;
+ }
+
+ .type-warning .notif-icon-wrapper {
+     background: #fffbeb;
+     color: #f59e0b;
+ }
+
+ .type-warning .notif-category {
+     color: #d97706;
+ }
+
+ /* Critical - Red */
+ .type-critical {
+     border-left-color: #ef4444;
+ }
+
+ .type-critical .notif-icon-wrapper {
+     background: #fef2f2;
+     color: #ef4444;
+ }
+
+ .type-critical .notif-category {
+     color: #dc2626;
+ }
+
+ /* Mobile Adjustments */
+ @media (max-width: 600px) {
+     .notif-item {
+         padding: 15px;
+     }
+
+     .notif-icon-wrapper {
+         width: 35px;
+         height: 35px;
+         font-size: 1rem;
+     }
+ }
